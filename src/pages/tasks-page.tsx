@@ -24,7 +24,7 @@ export default function TasksPage() {
   const [tasks, setTasks] = useState<Task[]>(() => loadTasks());
   const [isEditingTask, setIsEditingTask] = useState<Task | null>(null);
   const [filter, setFilter] = useState("all");
-  // const [SortByDate, setSortByDate] = useState<"new" | "old">("new");
+  const [SortByDate, setSortByDate] = useState<"new" | "old">("new");
   const [query, setQuery] = useState("");
 
   useEffect(() => {
@@ -72,15 +72,15 @@ export default function TasksPage() {
     return true;
   });
 
-  // const searchedTasks = filteredTasks.filter((x) => {
-  //   return x.title.includes(query);
-  // });
+  const searchedTasks = filteredTasks.filter((x) => {
+    return x.title.includes(query.trim().toLowerCase());
+  });
 
-  // const sortedTasks = [...searchedTasks].sort((a, b) => {
-  //   const ta = new Date(a.created).getTime();
-  //   const tb = new Date(b.created).getTime();
-  //   return SortByDate === "new" ? tb - ta : ta - tb;
-  // });
+  const sortedTasks = [...searchedTasks].sort((a, b) => {
+    const ta = new Date(a.created).getTime();
+    const tb = new Date(b.created).getTime();
+    return SortByDate === "new" ? tb - ta : ta - tb;
+  });
 
   const total = tasks.length;
   const completed = tasks.filter((x) => x.complete).length;
@@ -116,15 +116,17 @@ export default function TasksPage() {
             Завершенные
           </ButtonFilter>
         </div>
-        {/* 
-        <select onClick={(e) => setSortByDate(e.target.value as "new" | "old")}>
+
+        <select
+          onChange={(e) => setSortByDate(e.target.value as "new" | "old")}
+        >
           <option value="new">Сначала новые</option>
           <option value="old">Сначала старые</option>
-        </select> */}
+        </select>
       </div>
       <ProgressBar percent={percent} />
       <TasksList
-        tasks={filteredTasks}
+        tasks={sortedTasks}
         onToggle={handleToggleTask}
         onEdit={(task) => setIsEditingTask(task)}
         onRemove={handleRemoveTask}
