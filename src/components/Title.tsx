@@ -1,7 +1,13 @@
+import styled from "@emotion/styled";
+
+const Text = styled.h1`
+  margin-bottom: 0.2em;
+`;
+
 type TitleProps = {
   text: string;
 };
 
 export function Title(props: TitleProps) {
-  return <h1>{props.text}</h1>;
+  return <Text>{props.text}</Text>;
 }

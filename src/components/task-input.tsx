@@ -31,6 +31,20 @@ type TaskInputProps = {
 
 export function TaskInput(props: TaskInputProps) {
   const [task, setTask] = useState("");
+
+  const handleAddTask = () => {
+    if (task.trim() !== "") {
+      props.onAdd(task);
+      setTask("");
+    }
+  };
+
+  const handleKeyPress = (e: React.KeyboardEvent) => {
+    if (e.key === "Enter") {
+      handleAddTask();
+    }
+  };
+
   return (
     <Wrapper>
       <ContainerAction>
@@ -39,8 +53,9 @@ export function TaskInput(props: TaskInputProps) {
           value={task}
           placeholder="Введите задачу"
           onChange={(event) => setTask(event.target.value)}
+          onKeyPress={handleKeyPress}
         />
-        <MainButton onClick={() => props.onAdd(task)} text="Добавить" />
+        <MainButton onClick={handleAddTask} text="Добавить" />
       </ContainerAction>
       <StyledInput
         onChange={(e) => props.setQuery(e.target.value)}
