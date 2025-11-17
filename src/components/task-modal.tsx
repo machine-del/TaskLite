@@ -96,9 +96,21 @@ type TaskModalProps = {
 export function TaskModal(props: TaskModalProps) {
   const [title, setTitle] = useState(props.task.title);
   const [description, setDescription] = useState(props.task.description ?? "");
-  const [deadline, setDeadline] = useState<string>(
-    props.task.deadline ? props.task.deadline?.toISOString().split("T")[0] : ""
-  );
+  const [deadline, setDeadline] = useState<string>(() => {
+    try {
+      if (props.task.deadline instanceof Date) {
+        return props.task.deadline.toISOString().split("T")[0];
+      } else if (typeof props.task.deadline === "string") {
+        const date = new Date(props.task.deadline);
+        return isNaN(date.getTime()) ? "" : date.toISOString().split("T")[0];
+      } else {
+        return "";
+      }
+    } catch (error) {
+      console.error(error);
+      return "";
+    }
+  });
 
   useEffect(() => {
     window.addEventListener("keydown", (e) => {
